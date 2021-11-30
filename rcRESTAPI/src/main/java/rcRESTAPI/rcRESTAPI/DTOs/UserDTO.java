@@ -1,29 +1,28 @@
-package rcRESTAPI.rcRESTAPI.Entity;
+package rcRESTAPI.rcRESTAPI.DTOs;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import rcRESTAPI.rcRESTAPI.Entity.Interaction;
-import rcRESTAPI.rcRESTAPI.Entity.Post;
 import rcRESTAPI.rcRESTAPI.Entity.User;
 
 public class UserDTO {
 
-	private String userId = UUID.randomUUID().toString();
+	private Long userId;
 	private String username;
 	private String password;
-	private List<PostDTO> posts;
-	private List<InteractionDTO> interactions;
+	private List<PostDTO> posts = new ArrayList<PostDTO>();
+	private List<PostDTO> interactions = new ArrayList<PostDTO>();
 
-	public List<InteractionDTO> getInteractions() {
+	public List<PostDTO> getInteractions() {
 		return interactions;
 	}
 
-	public void setInteractions(List<InteractionDTO> interactions) {
+	public void setInteractions(List<PostDTO> interactions) {
 		this.interactions = interactions;
 	}
 
-	public String getUserId() {
+	public Long getUserId() {
 		return userId;
 	}
 
@@ -35,7 +34,7 @@ public class UserDTO {
 		this.posts = posts;
 	}
 
-	public void setUserId(String userId) {
+	public void setUserId(Long userId) {
 		this.userId = userId;
 	}
 
@@ -54,10 +53,4 @@ public class UserDTO {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-
-	public User toEntity() {
-		User newUser = new User();
-		newUser.setInteractions(null);
-	}
-
 }

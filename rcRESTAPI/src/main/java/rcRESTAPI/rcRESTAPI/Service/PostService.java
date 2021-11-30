@@ -29,7 +29,7 @@ public class PostService implements BasicCRUD<Post> {
 	}
 
 	@Override
-	public Optional<Post> getById(String id) {
+	public Optional<Post> getById(Long id) {
 		return postRepository.findById(id);
 	}
 
@@ -40,7 +40,6 @@ public class PostService implements BasicCRUD<Post> {
 		if (toUpdate.isPresent()) {
 			toUpdate.get().setHeadline(dto.getHeadline());
 			toUpdate.get().setText(dto.getHeadline());
-			toUpdate.get().setInteractions(dto.getInteractions());
 			postRepository.save(toUpdate.get());
 			return toUpdate.get();
 		}
@@ -48,7 +47,7 @@ public class PostService implements BasicCRUD<Post> {
 	}
 
 	@Override
-	public void deleteById(String id) {
+	public void deleteById(Long id) {
 		postRepository.deleteById(id);
 
 	}

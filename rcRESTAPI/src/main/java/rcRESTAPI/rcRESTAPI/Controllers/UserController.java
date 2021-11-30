@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
+import rcRESTAPI.rcRESTAPI.console;
 import rcRESTAPI.rcRESTAPI.DTOs.UserDTO;
 import rcRESTAPI.rcRESTAPI.Entity.User;
 import rcRESTAPI.rcRESTAPI.Service.UserService;
@@ -24,8 +25,9 @@ public class UserController {
 
 	@PostMapping("/users")
 	public ResponseEntity create(@RequestBody UserDTO dto) {
-		User user = userService.create(dto);
-		if(user.getUserId()!=null) {		
+		console.log(dto.getUserId()+"idididi");
+		UserDTO userDTO = userService.create(dto);
+		if(userDTO.getUserId()!=null) {		
 			return ResponseEntity.status(HttpStatus.CREATED).build();
 		}
 		else {
@@ -44,8 +46,9 @@ public class UserController {
 		}
 	}
 	
-	@PutMapping("/users/logout")
+	@PutMapping("/users")
 	public ResponseEntity logout(@RequestHeader("token") String token, @RequestHeader("username") String username) {
+		System.out.println(token+"||"+username);
 		userService.logout(token, username);
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}

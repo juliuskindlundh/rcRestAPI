@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import rcRESTAPI.rcRESTAPI.Entity.Post;
 
 @Repository
-public interface PostRepository extends CrudRepository<Post, String>{
+public interface PostRepository extends CrudRepository<Post, Long>{
 
 }

@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import rcRESTAPI.rcRESTAPI.Converter;
+import rcRESTAPI.rcRESTAPI.DTOs.PostDTO;
 import rcRESTAPI.rcRESTAPI.Entity.Post;
 import rcRESTAPI.rcRESTAPI.Service.PostService;
 import rcRESTAPI.rcRESTAPI.Service.UserService;
@@ -30,9 +32,9 @@ public class PostController {
 	UserService userService;
 
 	@PostMapping("/posts")
-	public ResponseEntity<Post> create(@RequestBody Post dto, @RequestHeader("token") String token, @RequestHeader("username") String username) {
+	public ResponseEntity<PostDTO> create(@RequestBody Post dto, @RequestHeader("token") String token, @RequestHeader("username") String username) {
 		if (userService.validateToken(username, token)) {
-			Post response = postService.create(dto);
+			PostDTO response = Converter.postToDTO(postService.create(dto));
 			if (response.getPostId() != null) {
 				return ResponseEntity.status(HttpStatus.CREATED).body(response);
 			} else {
@@ -51,7 +53,7 @@ public class PostController {
 	}
 
 	@GetMapping("/posts/{id}")
-	public ResponseEntity<Post> findById(@PathVariable(name = "id") String id) {
+	public ResponseEntity<Post> findById(@PathVariable(name = "id") Long id) {
 		Optional<Post> optional = postService.getById(id);
 		if (optional.isPresent()) {
 			return ResponseEntity.status(HttpStatus.OK).body(optional.get());
@@ -73,7 +75,7 @@ public class PostController {
 	}
 
 	@RequestMapping(value = "/posts/{id}", method = { RequestMethod.DELETE })
-	public ResponseEntity<Object> deleteById(@PathVariable(name = "id") String id, @RequestHeader("token") String token, @RequestHeader("username") String username) {
+	public ResponseEntity<Object> deleteById(@PathVariable(name = "id") Long id, @RequestHeader("token") String token, @RequestHeader("username") String username) {
 		if(userService.validateToken(username, token)) {
 			postService.deleteById(id);
 			return ResponseEntity.status(HttpStatus.OK).body(null);

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import rcRESTAPI.rcRESTAPI.Entity.User;
 
 @Repository
-public interface UserRepository extends CrudRepository<User, String> {
+public interface UserRepository extends CrudRepository<User, Long> {
 
 	Optional<User> findByUsername(String username);
 

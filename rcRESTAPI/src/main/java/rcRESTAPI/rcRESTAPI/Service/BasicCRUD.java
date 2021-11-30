@@ -7,7 +7,7 @@ public interface BasicCRUD<T> {
 	
 	public T create(T dto);
 	public ArrayList<T> getAll();
-	public Optional<T> getById(String id);
+	public Optional<T> getById(Long id);
 	public T update(T dto);
-	public void deleteById(String id);
+	public void deleteById(Long id);
 }

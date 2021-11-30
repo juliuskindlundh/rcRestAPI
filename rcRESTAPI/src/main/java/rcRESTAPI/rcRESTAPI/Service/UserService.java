@@ -7,6 +7,7 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import rcRESTAPI.rcRESTAPI.Converter;
 import rcRESTAPI.rcRESTAPI.DTOs.UserDTO;
 import rcRESTAPI.rcRESTAPI.Entity.User;
 import rcRESTAPI.rcRESTAPI.Repository.UserRepository;
@@ -23,16 +24,21 @@ public class UserService {
 	@Autowired
 	private HashMap<String, String> tokensHashMap;
 
-	public User create(UserDTO dto) {
-		System.out.println(dto.getUserId());
-		if(dto.getUsername().length() < 1 || userRepository.findByUsername(dto.getUsername()).isPresent()) {
+	public UserDTO create(UserDTO dto) {
+		if(dto.getUsername().length()<1) {
+			return dto;
+		}
+		else if(dto.getPassword().length()<1) {
+			return dto;
+		}
+		else if(userRepository.findByUsername(dto.getUsername()).isPresent()) {
 			return dto;
 		}
 		dto.setPassword(passwordEncodeAndMatch.encode(dto.getPassword()));
-		return userRepository.save(dto.toEntity());
+		return Converter.userToDTO(userRepository.save(Converter.DTOToUser(dto)));
 	}
 
-	public Optional<User> getById(String id) {
+	public Optional<User> getById(Long id) {
 		return userRepository.findById(id);
 	}
 
