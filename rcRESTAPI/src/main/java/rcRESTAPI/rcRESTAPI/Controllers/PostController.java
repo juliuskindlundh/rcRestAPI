@@ -16,9 +16,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import rcRESTAPI.rcRESTAPI.Converter;
 import rcRESTAPI.rcRESTAPI.DTOs.PostDTO;
 import rcRESTAPI.rcRESTAPI.Entity.Post;
+import rcRESTAPI.rcRESTAPI.Entity.User;
 import rcRESTAPI.rcRESTAPI.Service.PostService;
 import rcRESTAPI.rcRESTAPI.Service.UserService;
 
@@ -32,23 +32,25 @@ public class PostController {
 	UserService userService;
 
 	@PostMapping("/posts")
-	public ResponseEntity<PostDTO> create(@RequestBody Post dto, @RequestHeader("token") String token, @RequestHeader("username") String username) {
+	public ResponseEntity<PostDTO> create(@RequestBody PostDTO dto, @RequestHeader("token") String token,
+			@RequestHeader("username") String username) {
 		if (userService.validateToken(username, token)) {
-			PostDTO response = Converter.postToDTO(postService.create(dto));
+			dto.setCreator(username);
+			PostDTO response = postService.create(dto);
 			if (response.getPostId() != null) {
+				userService.addPost(response,username);
 				return ResponseEntity.status(HttpStatus.CREATED).body(response);
 			} else {
 				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
 			}
-		}
-		else {
+		} else {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
 		}
 
 	}
 
 	@GetMapping("/posts")
-	public ResponseEntity<ArrayList<Post>> findAll() {
+	public ResponseEntity<ArrayList<PostDTO>> findAll() {
 		return ResponseEntity.status(HttpStatus.OK).body(postService.getAll());
 	}
 
@@ -62,25 +64,24 @@ public class PostController {
 		}
 	}
 
-	@RequestMapping(value = "/posts", produces = "application/json", method = { RequestMethod.PUT })
-	public ResponseEntity<Post> update(@RequestBody Post dto, @RequestHeader("token") String token, @RequestHeader("username") String username) {
-		if(userService.validateToken(username, token)) {
-			postService.update(dto);
-		return ResponseEntity.status(HttpStatus.OK).body(null);
-		}
-		else {
+	@RequestMapping(value = "/posts", method = { RequestMethod.DELETE })
+	public ResponseEntity<Object> deleteById(@RequestHeader("token") String token,
+			@RequestHeader("username") String username,@RequestHeader("postid") String postid) {
+		if (userService.validateToken(username, token)) {
+			postService.deleteById(Long.parseLong(postid),username);
+			return ResponseEntity.status(HttpStatus.OK).body(null);
+		} else {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 		}
-		
 	}
 
-	@RequestMapping(value = "/posts/{id}", method = { RequestMethod.DELETE })
-	public ResponseEntity<Object> deleteById(@PathVariable(name = "id") Long id, @RequestHeader("token") String token, @RequestHeader("username") String username) {
-		if(userService.validateToken(username, token)) {
-			postService.deleteById(id);
-			return ResponseEntity.status(HttpStatus.OK).body(null);
-		}
-		else {
+	@GetMapping("/posts/getuserposts")
+	public ResponseEntity<ArrayList<Post>> getPosts(@RequestHeader("token") String token, @RequestHeader("username") String username) {
+		if (userService.validateToken(username, token)) {
+			Optional<User> user = userService.getByUsername(username);
+			ArrayList<Post> list = new ArrayList<Post>(user.get().getPosts());
+			return ResponseEntity.status(HttpStatus.OK).body(list);
+		} else {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 		}
 	}

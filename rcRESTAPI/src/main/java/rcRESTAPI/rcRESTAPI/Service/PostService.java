@@ -7,47 +7,36 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import rcRESTAPI.rcRESTAPI.Converter;
+import rcRESTAPI.rcRESTAPI.DTOs.PostDTO;
 import rcRESTAPI.rcRESTAPI.Entity.Post;
 import rcRESTAPI.rcRESTAPI.Repository.PostRepository;
+import rcRESTAPI.rcRESTAPI.Repository.UserRepository;
 
 @Service
-public class PostService implements BasicCRUD<Post> {
+public class PostService {
 
 	@Autowired
 	private PostRepository postRepository;
+	@Autowired
+	private UserService userService;
 
-	@Override
-	public Post create(Post post) {
-		return postRepository.save(post);
+	public PostDTO create(PostDTO dto) {
+		return Converter.postToDTO(postRepository.save(Converter.DTOToPost(dto)));
 	}
 
-	@Override
-	public ArrayList<Post> getAll() {
-		ArrayList<Post> list = new ArrayList<Post>();
-		postRepository.findAll().forEach(post -> list.add(post));
+	public ArrayList<PostDTO> getAll() {
+		ArrayList<PostDTO> list = new ArrayList<PostDTO>();
+		postRepository.findAll().forEach(post -> list.add(Converter.postToDTO(post)));
 		return list;
 	}
 
-	@Override
 	public Optional<Post> getById(Long id) {
 		return postRepository.findById(id);
 	}
 
-	@Override
-	@Transactional
-	public Post update(Post dto) {
-		Optional<Post> toUpdate = getById(dto.getPostId());
-		if (toUpdate.isPresent()) {
-			toUpdate.get().setHeadline(dto.getHeadline());
-			toUpdate.get().setText(dto.getHeadline());
-			postRepository.save(toUpdate.get());
-			return toUpdate.get();
-		}
-		return null;
-	}
-
-	@Override
-	public void deleteById(Long id) {
+	public void deleteById(Long id,String username) {
+		userService.removePost(id,username);
 		postRepository.deleteById(id);
 
 	}

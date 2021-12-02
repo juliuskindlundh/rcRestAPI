@@ -5,8 +5,15 @@ public class PostDTO {
 	private Long postId;
 	private String headline;
 	private String text;
-	private int upvotes;
-	private int downvotes;
+	private String creator;
+	
+	public String getCreator() {
+		return creator;
+	}
+
+	public void setCreator(String creator) {
+		this.creator = creator;
+	}
 
 	public Long getPostId() {
 		return postId;
@@ -30,22 +37,6 @@ public class PostDTO {
 
 	public void setText(String text) {
 		this.text = text;
-	}
-
-	public int getUpvotes() {
-		return upvotes;
-	}
-
-	public void setUpvotes(int upvotes) {
-		this.upvotes = upvotes;
-	}
-
-	public int getDownvotes() {
-		return downvotes;
-	}
-
-	public void setDownvotes(int downvotes) {
-		this.downvotes = downvotes;
 	}
 
 }

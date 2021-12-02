@@ -11,26 +11,17 @@ public class UserDTO {
 	private Long userId;
 	private String username;
 	private String password;
-	private List<PostDTO> posts = new ArrayList<PostDTO>();
-	private List<PostDTO> interactions = new ArrayList<PostDTO>();
-
-	public List<PostDTO> getInteractions() {
-		return interactions;
-	}
-
-	public void setInteractions(List<PostDTO> interactions) {
-		this.interactions = interactions;
-	}
+	private ArrayList<PostDTO> posts = new ArrayList<PostDTO>();
 
 	public Long getUserId() {
 		return userId;
 	}
 
-	public List<PostDTO> getPosts() {
+	public ArrayList<PostDTO> getPosts() {
 		return posts;
 	}
 
-	public void setPosts(List<PostDTO> posts) {
+	public void setPosts(ArrayList<PostDTO> posts) {
 		this.posts = posts;
 	}
 

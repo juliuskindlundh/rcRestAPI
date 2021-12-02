@@ -1,13 +1,10 @@
 package rcRESTAPI.rcRESTAPI.Entity;
 
-import java.util.UUID;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-import lombok.Generated;
 import lombok.NonNull;
 
 @Entity
@@ -22,8 +19,16 @@ public class Post {
 	@NonNull
 	private String text;
 	
-	private int upvotes;
-	private int downvotes;
+	private String creator; 
+	
+	public String getCreator() {
+		return creator;
+	}
+
+	public void setCreator(String creator) {
+		this.creator = creator;
+	}
+	
 	public long getPostId() {
 		return postId;
 	}
@@ -47,22 +52,4 @@ public class Post {
 	public void setText(String text) {
 		this.text = text;
 	}
-
-	public int getUpvotes() {
-		return upvotes;
-	}
-
-	public void setUpvotes(int upvotes) {
-		this.upvotes = upvotes;
-	}
-
-	public int getDownvotes() {
-		return downvotes;
-	}
-
-	public void setDownvotes(int downvotes) {
-		this.downvotes = downvotes;
-	}
-
-
 }
